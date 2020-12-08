@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cyl.hospital.mapper.RoleInfoMapper">
+
+    <!--查询所有-->
+    <select id="getAllRole" resultType="roleInfo">
+        select * from roleinfo where delFlag=1
+    </select>
+
+    <select id="getRoleList" resultType="roleInfo" parameterType="string">
+        select *
+        from roleinfo
+        where 1=1
+        <if test='roleName!=null and roleName!=" " '>
+            and roleName like concat('%',#{roleName},'%')
+        </if>
+    </select>
+
+    <!--插入-->
+    <insert id="addRole" parameterType="roleInfo">
+       insert
+       into roleinfo(roleName,des,delFlag)
+       values(#{roleName},#{des},1)
+    </insert>
+
+    <!--删除-->
+    <update id="delRoleById">
+       update roleinfo
+       set delFlag=0
+       where id=#{id}
+    </update>
+
+    <!--通过id获得对象-->
+    <select id="getRoleById" parameterType="int" resultType="roleInfo">
+        select *
+        from roleinfo
+        where id=#{id}
+    </select>
+
+    <!--修改-->
+    <update id="updateRole" parameterType="roleInfo">
+       update roleinfo
+       set roleName=#{roleName},des=#{des},delFlag=#{delFlag}
+       where id=#{id}
+    </update>
+
+</mapper>

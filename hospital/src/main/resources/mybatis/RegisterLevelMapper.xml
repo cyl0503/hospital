@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cyl.hospital.mapper.RegisterLevelMapper" >
+
+    <!--删除-->
+    <update id="delRegLevelById">
+       update registerLevel
+       set delFlag=0
+       where id=#{id}
+    </update>
+
+    <select id="getRegisterLevelList" resultType="registerLevel" parameterType="string">
+        select *
+        from registerLevel
+        where 1=1
+        <if test='levelName!=null and levelName!=" " '>
+            and levelName like concat('%',#{levelName},'%')
+        </if>
+    </select>
+
+    <!--通过id获得对象-->
+    <select id="getRegLevelById" parameterType="int" resultType="registerLevel">
+        select *
+        from registerLevel
+        where id=#{id}
+    </select>
+
+    <!--修改-->
+    <update id="updateRegLevel" parameterType="registerLevel">
+       update registerLevel
+       set levelName=#{levelName},registrationFee=#{registrationFee},levelQuota=#{levelQuota},delFlag=#{delFlag}
+       where id=#{id}
+    </update>
+
+    <!--插入-->
+    <insert id="insertRegLevel" parameterType="registerLevel">
+       insert
+       into registerLevel(levelName,registrationFee,levelQuota,delFlag)
+       values(#{levelName},#{registrationFee},#{levelQuota},1)
+    </insert>
+
+</mapper>

@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cyl.hospital.mapper.UserInfoMapper">
+
+    <!--查询所有-->
+    <select id="getAllUser" resultType="userInfo">
+        select * from userinfo where delFlag=1
+    </select>
+
+    <select id="getUserList" resultType="userInfo" parameterType="string">
+        select *
+        from userinfo
+        where 1=1
+        <if test='userName!=null and userName!=" " '>
+            and userName like concat('%',#{userName},'%')
+        </if>
+    </select>
+
+    <!--查询为了表格-->
+    <select id="getAllUserforForm" resultType="userInfo" parameterType="string">
+        select userinfo.*,roleInfo.roleName,department.deptName,registerlevel.levelName
+        from userinfo,roleInfo,department,registerlevel
+        where userinfo.delFlag=1
+        and userinfo.roleId=roleinfo.Id
+        and userinfo.deptId=department.id
+        and userinfo.levelId=registerlevel.id
+        <if test='realName!=null and realName!=" " '>
+            and realName like concat('%',#{realName},'%')
+        </if>
+    </select>
+
+    <!--通过id获得对象-->
+    <select id="getUserById" parameterType="int" resultType="userInfo">
+        select userinfo.*,roleName,deptName,levelName
+        from userinfo,roleInfo,department,registerlevel
+        where userinfo.delFlag=1
+        and userinfo.roleId=roleinfo.Id
+        and userinfo.deptId=department.id
+        and userinfo.levelId=registerlevel.id
+        and userId = #{userId}
+    </select>
+
+    <!--插入-->
+    <insert id="insertUser" parameterType="userInfo">
+       insert
+       into userinfo(userName,password,realName,roleId,deptId,levelId,delFlag)
+       values(#{userName},#{password},#{realName},#{roleId},#{deptId},#{levelId},1)
+    </insert>
+
+    <!--删除-->
+    <update id="deleteUserById">
+       update userinfo
+       set delFlag=0
+       where userId=#{userId}
+    </update>
+
+    <!--修改-->
+    <update id="updateUser" parameterType="userInfo">
+       update userinfo
+       set userName=#{userName},password=#{password},realName=#{realName},deptId=#{deptId},levelId=#{levelId}
+       where userId=#{userId}
+    </update>
+
+    <!--登录-->
+    <select id="Login" resultType="userInfo">
+       select * from userinfo where userName=#{userName} and password=#{password}
+    </select>
+
+    <select id="getDoctorByDeptAndRegisterLevel" resultType="userInfo" parameterType="map">
+        select
+        u.userId,u.realName,d.deptName,r.levelName
+        from userInfo u,department d,registerLevel r
+        where u.deptId=d.id and u.levelId=r.id
+        <if test="deptName!=null and deptName!='请选择' ">
+            and deptName=#{deptName}
+        </if>
+        <if test="levelName!=null and levelName!='请选择' ">
+            and levelName=#{levelName}
+        </if>
+    </select>
+
+    <!-- 根据医生查询挂号初始号额 -->
+    <select id="getlevelQuota" parameterType="int" resultType="int">
+  		select levelQuota ,realName
+  		from registerLevel r ,userInfo u
+  		where u.levelId=r.Id and userid=#{userId}
+  </select>
+
+    <!-- 根据医生查询挂号已用号额 -->
+    <select id="getUsedlevelQuota" parameterType="int" resultType="int">
+  	select count(*)
+  	from registerInfo
+  	where doctorId=#{doctorId}
+  </select>
+
+    <!--修改用户角色-->
+    <update id="updateUserRole" parameterType="userInfo">
+  	update userInfo set roleId = #{roleId}  where userId = #{userId} ;
+    </update>
+
+</mapper>

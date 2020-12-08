@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cyl.hospital.mapper.DepartmentMapper" >
+
+    <!--删除-->
+    <update id="delDeptById">
+       update department
+       set delFlag=0
+       where id=#{id}
+    </update>
+
+    <select id="getAllDepartment" resultType="department" parameterType="string">
+        select *
+        from department
+        where 1=1
+        <if test='deptName!=null and deptName!=" " '>
+            and deptName like concat('%',#{deptName},'%')
+        </if>
+    </select>
+
+    <!--通过id获得对象-->
+    <select id="getDeptById" parameterType="int" resultType="department">
+        select *
+        from department
+        where id=#{id}
+    </select>
+
+    <!--修改-->
+    <update id="updateDept" parameterType="department">
+       update department
+       set deptName=#{deptName},delFlag=#{delFlag}
+       where id=#{id}
+    </update>
+
+    <!--插入-->
+    <insert id="insertDept" parameterType="department">
+       insert
+       into department(deptName,delFlag)
+       values(#{deptName},#{delFlag})
+    </insert>
+
+</mapper>

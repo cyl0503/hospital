@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cyl.hospital.mapper.SettleCategoryMapper" >
+
+  <select id="getSettleCategoryList" resultType="SettleCategory">
+    select *  from settlecategory where delFlag=1
+  </select>
+
+  <!--删除-->
+  <update id="delSettleCategoryById">
+       update settlecategory
+       set delFlag=0
+       where id=#{id}
+    </update>
+
+  <select id="getAllSettleCategory" resultType="SettleCategory" parameterType="string">
+    select *
+    from settlecategory
+    where 1=1
+    <if test='settleName!=null and settleName!=" " '>
+      and settleName like concat('%',#{settleName},'%')
+    </if>
+  </select>
+
+  <!--通过id获得对象-->
+  <select id="getSettleCategoryById" parameterType="int" resultType="SettleCategory">
+        select *
+        from settlecategory
+        where id=#{id}
+    </select>
+
+  <!--修改-->
+  <update id="updateSettleCategory" parameterType="SettleCategory">
+       update settlecategory
+       set settleName=#{settlename},delFlag=#{delflag}
+       where id=#{id}
+    </update>
+
+  <!--插入-->
+  <insert id="insertSettleCategory" parameterType="SettleCategory">
+       insert
+       into settlecategory(settleName,delFlag)
+       values(#{settlename},1)
+    </insert>
+
+  <resultMap id="BaseResultMap" type="com.cyl.hospital.beans.SettleCategory" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="settleName" property="settlename" jdbcType="VARCHAR" />
+    <result column="delFlag" property="delflag" jdbcType="INTEGER" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, settleName, delFlag
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from settlecategory
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="Integer" >
+    delete from settlecategory
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.cyl.hospital.beans.SettleCategory" >
+    insert into settlecategory (id, settleName, delFlag
+      )
+    values (#{id,jdbcType=INTEGER}, #{settlename,jdbcType=VARCHAR}, #{delflag,jdbcType=INTEGER}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.cyl.hospital.beans.SettleCategory" >
+    insert into settlecategory
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="settlename != null" >
+        settleName,
+      </if>
+      <if test="delflag != null" >
+        delFlag,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="settlename != null" >
+        #{settlename,jdbcType=VARCHAR},
+      </if>
+      <if test="delflag != null" >
+        #{delflag,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.cyl.hospital.beans.SettleCategory" >
+    update settlecategory
+    <set >
+      <if test="settlename != null" >
+        settleName = #{settlename,jdbcType=VARCHAR},
+      </if>
+      <if test="delflag != null" >
+        delFlag = #{delflag,jdbcType=INTEGER},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.cyl.hospital.beans.SettleCategory" >
+    update settlecategory
+    set settleName = #{settlename,jdbcType=VARCHAR},
+      delFlag = #{delflag,jdbcType=INTEGER}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

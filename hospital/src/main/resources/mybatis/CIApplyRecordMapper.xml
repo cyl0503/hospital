@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cyl.hospital.mapper.CIApplyRecordMapper">
+
+    <!--添加申请记录-->
+    <insert id="addApplyRecord" parameterType="ciApplyRecord">
+        insert into ciapplyrecord(
+        caseNumber,registerId,itemId,
+        itemName,number,createTime,
+        doctorId,payStatus,total,
+        recordType)
+        values(
+        #{caseNumber,jdbcType=VARCHAR},#{registerId,jdbcType=INTEGER},#{itemId,jdbcType=INTEGER},
+        #{itemName,jdbcType=VARCHAR},#{number,jdbcType=INTEGER},#{createTime,jdbcType=TIMESTAMP},
+        #{doctorId,jdbcType=INTEGER},#{payStatus,jdbcType=INTEGER},#{total,jdbcType=DOUBLE},
+        #{recordType,jdbcType=INTEGER}
+        )
+    </insert>
+
+    <!--收费模块根据病历号和itemId修改申请记录表支付状态-->
+    <update id="updatePatientCIApplrRecordStatus" parameterType="map">
+        update ciapplyRecord set payStatus = 2 where caseNumber=#{caseNumber} and itemId in
+        <foreach collection="itemIds" item="itemid" open="(" close=")" separator=",">
+            ${itemid}
+        </foreach>
+    </update>
+
+</mapper>

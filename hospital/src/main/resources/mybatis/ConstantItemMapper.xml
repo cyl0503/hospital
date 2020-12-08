@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cyl.hospital.mapper.ConstantItemMapper" >
+
+  <select id="getSexList" resultType="ConstantItem">
+     select * from  constantitem where  constantId=1
+  </select>
+
+  <select id="getSettleCategoryList" resultType="ConstantItem">
+     select * from  constantitem where  constantId=2
+  </select>
+
+  <select id="getConstantItemList" resultType="ConstantItem">
+    select * from  constantitem where delFlag=1
+  </select>
+
+  <!--删除-->
+  <update id="deleteConstantById">
+     update constantitem
+     set delFlag=0
+     where id=#{id}
+  </update>
+    <!--修改-->
+    <update id="updateConstant" parameterType="ConstantItem">
+      update constantitem
+        set constantid = #{constantid,jdbcType=INTEGER},
+      constantItemName = #{constantitemname,jdbcType=VARCHAR},
+      delFlag = #{delflag,jdbcType=INTEGER}
+    where id = #{id,jdbcType=INTEGER}
+    </update>
+
+    <insert id="addConstant" parameterType="ConstantItem" >
+      insert into constantitem (constantId, constantItemName,
+        delFlag)
+      values (#{constantid,jdbcType=INTEGER}, #{constantitemname,jdbcType=VARCHAR},
+        1)
+    </insert>
+
+
+  <resultMap id="BaseResultMap" type="com.cyl.hospital.beans.ConstantItem" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="constantId" property="constantid" jdbcType="INTEGER" />
+    <result column="constantItemName" property="constantitemname" jdbcType="VARCHAR" />
+    <result column="delFlag" property="delflag" jdbcType="INTEGER" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, constantId, constantItemName, delFlag
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from constantitem
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="Integer" >
+    delete from constantitem
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.cyl.hospital.beans.ConstantItem" >
+    insert into constantitem (id, constantId, constantItemName, 
+      delFlag)
+    values (#{id,jdbcType=INTEGER}, #{constantid,jdbcType=INTEGER}, #{constantitemname,jdbcType=VARCHAR}, 
+      #{delflag,jdbcType=INTEGER})
+  </insert>
+  <insert id="insertSelective" parameterType="com.cyl.hospital.beans.ConstantItem" >
+    insert into constantitem
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="constantid != null" >
+        constantId,
+      </if>
+      <if test="constantitemname != null" >
+        constantItemName,
+      </if>
+      <if test="delflag != null" >
+        delFlag,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="constantid != null" >
+        #{constantid,jdbcType=INTEGER},
+      </if>
+      <if test="constantitemname != null" >
+        #{constantitemname,jdbcType=VARCHAR},
+      </if>
+      <if test="delflag != null" >
+        #{delflag,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.cyl.hospital.beans.ConstantItem" >
+    update constantitem
+    <set >
+      <if test="constantid != null" >
+        constantId = #{constantid,jdbcType=INTEGER},
+      </if>
+      <if test="constantitemname != null" >
+        constantItemName = #{constantitemname,jdbcType=VARCHAR},
+      </if>
+      <if test="delflag != null" >
+        delFlag = #{delflag,jdbcType=INTEGER},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.cyl.hospital.beans.ConstantItem" >
+    update constantitem
+    set constantId = #{constantid,jdbcType=INTEGER},
+      constantItemName = #{constantitemname,jdbcType=VARCHAR},
+      delFlag = #{delflag,jdbcType=INTEGER}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cyl.hospital.mapper.MedicalRecordMapper">
+
+     <!--根据病历号查询病例信息-->
+     <select id="getMedicalRecordByCaseNumber" parameterType="String" resultType="medicalRecord">
+        select * from medicalRecord where caseNumber=#{caseNumber}
+     </select>
+     <!--医生填写病例初始诊断，暂存 状态1 第一次点击暂存时-->
+    <insert id="tempSaveAddRecord" parameterType="medicalRecord">
+        insert into medicalRecord(
+        caseNumber,registerId,description,medicalHistory,
+        familyHistory,checkResult,primaryDiagnosis,
+        finalDiagnosis,status
+        )
+        values (#{caseNumber,jdbcType=VARCHAR},#{registerId,jdbcType=INTEGER},#{description,jdbcType=VARCHAR},
+        #{medicalHistory,jdbcType=VARCHAR},#{familyHistory,jdbcType=VARCHAR},#{checkResult,jdbcType=VARCHAR},
+        #{primaryDiagnosis,jdbcType=VARCHAR},#{finalDiagnosis,jdbcType=VARCHAR},1)
+    </insert>
+
+    <!--医生填写病例初始诊断，暂存 状态1 不是第一次点击暂存-->
+    <update id="tempSaveUpdateRecord" parameterType="medicalRecord">
+        update medicalRecord
+        set
+        description=#{description,jdbcType=VARCHAR},
+        medicalHistory=#{medicalHistory,jdbcType=VARCHAR},
+        familyHistory=#{familyHistory,jdbcType=VARCHAR},
+        checkResult=#{checkResult,jdbcType=VARCHAR},
+        primaryDiagnosis=#{primaryDiagnosis,jdbcType=VARCHAR},
+        finalDiagnosis=#{finalDiagnosis,jdbcType=VARCHAR}
+        where caseNumber=#{caseNumber,jdbcType=VARCHAR}
+    </update>
+
+    <!--医生填写病例直接确诊，添加记录 状态2 证毕-->
+    <insert id="SaveAddRecord" parameterType="medicalRecord">
+        insert into medicalRecord(
+        caseNumber,registerId,description,medicalHistory,
+        familyHistory,checkResult,primaryDiagnosis,
+        finalDiagnosis,status
+        )
+        values (#{caseNumber,jdbcType=VARCHAR},#{registerId,jdbcType=INTEGER},#{description,jdbcType=VARCHAR},
+        #{medicalHistory,jdbcType=VARCHAR},#{familyHistory,jdbcType=VARCHAR},#{checkResult,jdbcType=VARCHAR},
+        #{primaryDiagnosis,jdbcType=VARCHAR},#{finalDiagnosis,jdbcType=VARCHAR},2)
+    </insert>
+
+    <!--医生填写病例直接确诊，修改记录 状态2 证毕-->
+    <update id="SaveUpdateRecord" parameterType="medicalRecord">
+        update medicalRecord
+        set
+        description=#{description,jdbcType=VARCHAR},
+        medicalHistory=#{medicalHistory,jdbcType=VARCHAR},
+        familyHistory=#{familyHistory,jdbcType=VARCHAR},
+        checkResult=#{checkResult,jdbcType=VARCHAR},
+        primaryDiagnosis=#{primaryDiagnosis,jdbcType=VARCHAR},
+        finalDiagnosis=#{finalDiagnosis,jdbcType=VARCHAR},
+        status=2
+        where caseNumber=#{caseNumber,jdbcType=VARCHAR}
+    </update>
+</mapper>
